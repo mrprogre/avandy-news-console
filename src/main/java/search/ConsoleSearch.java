@@ -14,6 +14,19 @@ public class ConsoleSearch {
     private final List<String> headlinesList = new ArrayList<>();
     private int minutesIntervalConsole;
 
+    private void initRssSources() {
+        sources.put("Mail.ru", "https://news.mail.ru/rss/90/");
+        sources.put("Lenta", "https://lenta.ru/rss");
+        sources.put("Life", "https://life.ru/xml/feed.xml?hashtag=%D0%BD%D0%BE%D0%B2%D0%BE%D1%81%D1%82%D0%B8");
+        sources.put("РБК", "http://static.feed.rbc.ru/rbc/logical/footer/news.rss");
+        sources.put("Наука и жизнь", "https://www.nkj.ru/rss/");
+        sources.put("C-Main", "https://cnews.ru/inc/rss/news.xml");
+        sources.put("Коммерсант", "https://www.kommersant.ru/RSS/news.xml");
+        sources.put("Forbes", "https://www.forbes.ru/newrss.xml");
+        sources.put("МФД", "https://mfd.ru/rss/news/handler.ashx");
+        sources.put("Финмаркет", "http://www.finmarket.ru/rss/mainnews.asp");
+    }
+
     /*
       java -jar ./news.jar from@mail.ru from_password to@mail.ru 160 world russia fifa
       main arguments for console search:
@@ -24,18 +37,7 @@ public class ConsoleSearch {
       args5 = keyword1, keyword2 ... argsN = search keywords
     */
     public void searchByConsole(String[] args) {
-        sources.put("Mail.ru", "https://news.mail.ru/rss/90/");
-        sources.put("Эксперт", "https://expert.ru/doc-list/rss/");
-        sources.put("Lenta", "https://lenta.ru/rss");
-        sources.put("Life", "https://life.ru/xml/feed.xml?hashtag=%D0%BD%D0%BE%D0%B2%D0%BE%D1%81%D1%82%D0%B8");
-        sources.put("РБК", "http://static.feed.rbc.ru/rbc/logical/footer/news.rss");
-        sources.put("Наука и жизнь", "https://www.nkj.ru/rss/");
-        sources.put("C-Main", "https://cnews.ru/inc/rss/news.xml");
-        sources.put("Коммерсант", "https://www.kommersant.ru/RSS/news.xml");
-        sources.put("Вести", "https://www.vesti.ru/vesti.rss");
-        sources.put("Forbes", "https://www.forbes.ru/newrss.xml");
-        sources.put("МФД", "https://mfd.ru/rss/news/handler.ashx");
-        sources.put("Финмаркет", "http://www.finmarket.ru/rss/mainnews.asp");
+        initRssSources();
 
         String sendEmail = args[0];
         String emailPwd = args[1];
@@ -103,7 +105,6 @@ public class ConsoleSearch {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     // Сравнение дат для отображения новостей по интервалу
