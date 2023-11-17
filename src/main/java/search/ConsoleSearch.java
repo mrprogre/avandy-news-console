@@ -77,22 +77,22 @@ public class ConsoleSearch {
                             if (arg.equals(args[0]) || arg.equals(args[1]) || arg.equals(args[2]) || arg.equals(args[3]))
                                 continue;
 
-                            if (tableRow.title().toLowerCase().contains(arg.toLowerCase())
-                                    && tableRow.title().length() > 15) {
+                            if (tableRow.getTitle().toLowerCase().contains(arg.toLowerCase())
+                                    && tableRow.getTitle().length() > 15) {
 
                                 int dateDiff = Common.compareDates(new Date(), pubDate, intervalInMinutes);
                                 if (dateDiff != 0) {
                                     // Подготовка данных для отправки результатов на почту
-                                    String headline = tableRow.title() + "\n" +
-                                            tableRow.link() + "\n" +
-                                            tableRow.describe() + "\n" +
-                                            tableRow.source() + " - " +
-                                            tableRow.date();
+                                    String headline = tableRow.getTitle() + "\n" +
+                                            tableRow.getLink() + "\n" +
+                                            tableRow.getDescribe() + "\n" +
+                                            tableRow.getSource() + " - " +
+                                            tableRow.getDate();
 
                                     if (!headlinesList.contains(headline)) {
                                         newsCount++;
                                         headlinesList.add(headline);
-                                        System.out.println("\t" + newsCount + ") " + tableRow.title());
+                                        System.out.println("\t" + newsCount + ") " + tableRow.getTitle());
                                     }
                                 }
                             }
@@ -110,7 +110,6 @@ public class ConsoleSearch {
                 }
 
                 System.out.println("> sending an email..");
-                //System.out.println(headlinesList);
                 new EmailManager().sendMessage(headlinesList, sendEmail, emailPwd, sendTo);
             } else {
                 System.out.println("> news headlines not found");
