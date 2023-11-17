@@ -29,7 +29,7 @@ public class ConsoleSearch {
         sources.put("Habr", "https://habr.com/ru/rss/articles/?fl=ru&limit=100");
     }
 
-    /*
+    /**
       java -jar ./news.jar from@mail.ru from_password to@mail.ru 160 world russia fifa
       main arguments for console search:
       args1 = email from
@@ -43,13 +43,14 @@ public class ConsoleSearch {
         String emailPwd = args[1];
         String sendTo = args[2];
         if (!sendTo.contains("@")) {
-            throw new IncorrectEmail("incorrect e-mail");
+            throw new IncorrectEmail("> incorrect e-mail");
         }
         minutesIntervalConsole = Integer.parseInt(args[3]);
         headlinesList.clear();
         int newsCount = 0;
 
         try {
+            System.out.println("> start");
             initRssSources();
 
             for (Map.Entry<String, String> source : sources.entrySet()) {
@@ -78,16 +79,15 @@ public class ConsoleSearch {
 
                                 int dateDiff = compareDatesOnly(new Date(), pubDate);
                                 if (dateDiff != 0) {
-                                    newsCount++;
-
                                     // Подготовка данных для отправки результатов на почту
-                                    String headline = newsCount + ") " + tableRow.getTitle() + "\n" +
+                                    String headline = tableRow.getTitle() + "\n" +
                                             tableRow.getLink() + "\n" +
                                             tableRow.getDescribe() + "\n" +
                                             tableRow.getSource() + " - " +
                                             tableRow.getDate();
 
                                     if (!headlinesList.contains(headline)) {
+                                        newsCount++;
                                         headlinesList.add(headline);
                                         System.out.println(newsCount + ") " + tableRow.getTitle());
                                     }
@@ -99,12 +99,18 @@ public class ConsoleSearch {
                 }
             }
 
-            // Автоматическая отправка результатов
+            // auto send results to email
             if (headlinesList.size() > 0) {
-                System.out.println("sending an email..");
+                // add headline order numbers
+                for (int i = 0; i < headlinesList.size(); i++){
+                    headlinesList.set(i, i + 1 + ") " + headlinesList.get(i));
+                }
+
+                System.out.println("> sending an email..");
+                //System.out.println(headlinesList);
                 //new EmailManager().sendMessage(headlinesList, sendEmail, emailPwd, sendTo);
             } else {
-                System.out.println("news headlines not found");
+                System.out.println("> news headlines not found");
             }
 
         } catch (Exception e) {
