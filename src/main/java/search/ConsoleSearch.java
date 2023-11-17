@@ -1,11 +1,14 @@
 package search;
 
 import com.sun.syndication.feed.synd.SyndEntry;
+import email.EmailManager;
 import utils.Common;
-import exception.IncorrectEmail;
+import exception.IncorrectEmailException;
 import model.Headline;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class ConsoleSearch {
@@ -42,14 +45,15 @@ public class ConsoleSearch {
         String emailPwd = args[1];
         String sendTo = args[2];
         if (!sendTo.contains("@")) {
-            throw new IncorrectEmail("> incorrect e-mail");
+            throw new IncorrectEmailException("> incorrect e-mail");
         }
         int intervalInMinutes = Integer.parseInt(args[3]);
         headlinesList.clear();
         int newsCount = 0;
 
         try {
-            System.out.println("> start searching for news headlines");
+            System.out.println("> start searching for news headlines: " + LocalDateTime.now()
+                    .format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
             initRssSources();
 
             for (Map.Entry<String, String> source : sources.entrySet()) {
@@ -73,22 +77,22 @@ public class ConsoleSearch {
                             if (arg.equals(args[0]) || arg.equals(args[1]) || arg.equals(args[2]) || arg.equals(args[3]))
                                 continue;
 
-                            if (tableRow.getTitle().toLowerCase().contains(arg.toLowerCase())
-                                    && tableRow.getTitle().length() > 15) {
+                            if (tableRow.title().toLowerCase().contains(arg.toLowerCase())
+                                    && tableRow.title().length() > 15) {
 
                                 int dateDiff = Common.compareDates(new Date(), pubDate, intervalInMinutes);
                                 if (dateDiff != 0) {
                                     // Подготовка данных для отправки результатов на почту
-                                    String headline = tableRow.getTitle() + "\n" +
-                                            tableRow.getLink() + "\n" +
-                                            tableRow.getDescribe() + "\n" +
-                                            tableRow.getSource() + " - " +
-                                            tableRow.getDate();
+                                    String headline = tableRow.title() + "\n" +
+                                            tableRow.link() + "\n" +
+                                            tableRow.describe() + "\n" +
+                                            tableRow.source() + " - " +
+                                            tableRow.date();
 
                                     if (!headlinesList.contains(headline)) {
                                         newsCount++;
                                         headlinesList.add(headline);
-                                        System.out.println("\t" + newsCount + ") " + tableRow.getTitle());
+                                        System.out.println("\t" + newsCount + ") " + tableRow.title());
                                     }
                                 }
                             }
@@ -107,7 +111,7 @@ public class ConsoleSearch {
 
                 System.out.println("> sending an email..");
                 //System.out.println(headlinesList);
-                //new EmailManager().sendMessage(headlinesList, sendEmail, emailPwd, sendTo);
+                new EmailManager().sendMessage(headlinesList, sendEmail, emailPwd, sendTo);
             } else {
                 System.out.println("> news headlines not found");
             }

@@ -1,5 +1,6 @@
 package email;
 
+import javax.mail.AuthenticationFailedException;
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,9 +21,11 @@ public class EmailManager {
                     sendEmail,
                     emailPwd,
                     sendTo);
-            System.out.println("e-mail sent successfully");
+            System.out.println("> e-mail sent successfully");
+        }  catch (AuthenticationFailedException a) {
+            System.out.println("> incorrect email or password");
         } catch (MessagingException e) {
-            e.printStackTrace();
+            System.out.println("> email not sent: " + e.getMessage());
         }
     }
 }
