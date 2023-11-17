@@ -7,5 +7,5 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-/News.jar
 /src/main/java/utils/Properties.java
+/news-console.jar
