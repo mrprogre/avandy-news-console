@@ -50,7 +50,7 @@ public class ConsoleSearch {
         int newsCount = 0;
 
         try {
-            System.out.println("> start");
+            System.out.println("> start searching for news headlines");
             initRssSources();
 
             for (Map.Entry<String, String> source : sources.entrySet()) {
@@ -89,7 +89,7 @@ public class ConsoleSearch {
                                     if (!headlinesList.contains(headline)) {
                                         newsCount++;
                                         headlinesList.add(headline);
-                                        System.out.println(newsCount + ") " + tableRow.getTitle());
+                                        System.out.println("\t" + newsCount + ") " + tableRow.getTitle());
                                     }
                                 }
                             }
