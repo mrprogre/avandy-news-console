@@ -51,53 +51,56 @@ public class ConsoleSearch {
 
         try {
             for (Map.Entry<String, String> source : sources.entrySet()) {
-                for (Object message : new Parser().parseFeed(source.getValue()).getEntries()) {
-                    SyndEntry entry = (SyndEntry) message;
-                    String title = entry.getTitle();
-                    Date pubDate = entry.getPublishedDate();
-                    String newsDescribe = entry.getDescription().getValue()
-                            .trim()
-                            .replaceAll(("<p>|</p>|<br />"), "");
+                try {
+                    for (Object message : new Parser().parseFeed(source.getValue()).getEntries()) {
+                        SyndEntry entry = (SyndEntry) message;
+                        String title = entry.getTitle();
+                        Date pubDate = entry.getPublishedDate();
+                        String newsDescribe = entry.getDescription().getValue()
+                                .trim()
+                                .replaceAll(("<p>|</p>|<br />"), "");
 
-                    TableRow tableRow = new TableRow(
-                            source.getKey(),
-                            title,
-                            newsDescribe,
-                            DATE_FORMAT.format(pubDate),
-                            entry.getLink());
+                        TableRow tableRow = new TableRow(
+                                source.getKey(),
+                                title,
+                                newsDescribe,
+                                DATE_FORMAT.format(pubDate),
+                                entry.getLink());
 
-                    for (String arg : args) {
-                        if (arg.equals(args[0]) || arg.equals(args[1]) || arg.equals(args[2])|| arg.equals(args[3]))
-                            continue;
+                        for (String arg : args) {
+                            if (arg.equals(args[0]) || arg.equals(args[1]) || arg.equals(args[2]) || arg.equals(args[3]))
+                                continue;
 
-                        if (tableRow.getTitle().toLowerCase().contains(arg.toLowerCase())
-                                && tableRow.getTitle().length() > 15) {
+                            if (tableRow.getTitle().toLowerCase().contains(arg.toLowerCase())
+                                    && tableRow.getTitle().length() > 15) {
 
-                            int dateDiff = compareDatesOnly(new Date(), pubDate);
-                            if (dateDiff != 0) {
-                                newsCount++;
+                                int dateDiff = compareDatesOnly(new Date(), pubDate);
+                                if (dateDiff != 0) {
+                                    newsCount++;
 
-                                // Подготовка данных для отправки результатов на почту
-                                String headline = newsCount + ") " + tableRow.getTitle() + "\n" +
-                                        tableRow.getLink() + "\n" +
-                                        tableRow.getDescribe() + "\n" +
-                                        tableRow.getSource() + " - " +
-                                        tableRow.getDate();
+                                    // Подготовка данных для отправки результатов на почту
+                                    String headline = newsCount + ") " + tableRow.getTitle() + "\n" +
+                                            tableRow.getLink() + "\n" +
+                                            tableRow.getDescribe() + "\n" +
+                                            tableRow.getSource() + " - " +
+                                            tableRow.getDate();
 
-                                if (!headlinesList.contains(headline)) {
-                                    headlinesList.add(headline);
-                                    System.out.println(newsCount + ") " + tableRow.getTitle());
+                                    if (!headlinesList.contains(headline)) {
+                                        headlinesList.add(headline);
+                                        System.out.println(newsCount + ") " + tableRow.getTitle());
+                                    }
                                 }
                             }
                         }
                     }
+                } catch (Exception e) {
                 }
             }
 
             // Автоматическая отправка результатов
             if (headlinesList.size() > 0) {
                 System.out.println("sending an email..");
-                new EmailManager().sendMessage(headlinesList, sendEmail, emailPwd, sendTo);
+                //new EmailManager().sendMessage(headlinesList, sendEmail, emailPwd, sendTo);
             } else {
                 System.out.println("news headlines not found");
             }
