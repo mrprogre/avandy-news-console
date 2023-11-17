@@ -4,9 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Objects;
 
-public class TableRow implements Comparable<TableRow> {
+public class Headline implements Comparable<Headline> {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MMM HH:mm", Locale.ENGLISH);
     private final String source;
     private final String title;
@@ -14,7 +13,7 @@ public class TableRow implements Comparable<TableRow> {
     private final String date;
     private final String link;
 
-    public TableRow(String source, String title, String describe, String date, String link) {
+    public Headline(String source, String title, String describe, String date, String link) {
         this.source = source;
         this.title = title;
         this.describe = describe;
@@ -49,7 +48,7 @@ public class TableRow implements Comparable<TableRow> {
     }
 
     @Override
-    public int compareTo(TableRow o) {
+    public int compareTo(Headline o) {
         try {
             Date date1 = DATE_FORMAT.parse(o.getDate());
             Date date2 = DATE_FORMAT.parse(this.getDate());

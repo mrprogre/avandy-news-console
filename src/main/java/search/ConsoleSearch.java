@@ -1,9 +1,9 @@
 package search;
 
 import com.sun.syndication.feed.synd.SyndEntry;
-import email.EmailManager;
+import utils.Common;
 import exception.IncorrectEmail;
-import model.TableRow;
+import model.Headline;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -12,7 +12,6 @@ public class ConsoleSearch {
     private final Map<String, String> sources = new HashMap<>();
     private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MMM HH:mm", Locale.ENGLISH);
     private final List<String> headlinesList = new ArrayList<>();
-    private int minutesIntervalConsole;
 
     private void initRssSources() {
         sources.put("Mail.ru", "https://news.mail.ru/rss/90/");
@@ -45,7 +44,7 @@ public class ConsoleSearch {
         if (!sendTo.contains("@")) {
             throw new IncorrectEmail("> incorrect e-mail");
         }
-        minutesIntervalConsole = Integer.parseInt(args[3]);
+        int intervalInMinutes = Integer.parseInt(args[3]);
         headlinesList.clear();
         int newsCount = 0;
 
@@ -63,7 +62,7 @@ public class ConsoleSearch {
                                 .trim()
                                 .replaceAll(("<p>|</p>|<br />"), "");
 
-                        TableRow tableRow = new TableRow(
+                        Headline tableRow = new Headline(
                                 source.getKey(),
                                 title,
                                 newsDescribe,
@@ -77,7 +76,7 @@ public class ConsoleSearch {
                             if (tableRow.getTitle().toLowerCase().contains(arg.toLowerCase())
                                     && tableRow.getTitle().length() > 15) {
 
-                                int dateDiff = compareDatesOnly(new Date(), pubDate);
+                                int dateDiff = Common.compareDates(new Date(), pubDate, intervalInMinutes);
                                 if (dateDiff != 0) {
                                     // Подготовка данных для отправки результатов на почту
                                     String headline = tableRow.getTitle() + "\n" +
@@ -118,19 +117,4 @@ public class ConsoleSearch {
         }
     }
 
-    // Сравнение дат для отображения новостей по интервалу
-    private int compareDatesOnly(Date now, Date in) {
-        int minutes = minutesIntervalConsole;
-
-        Calendar minus = Calendar.getInstance();
-        minus.setTime(new Date());
-        minus.add(Calendar.MINUTE, -minutes);
-        Calendar now_cal = Calendar.getInstance();
-        now_cal.setTime(now);
-
-        if (in.after(minus.getTime()) && in.before(now_cal.getTime())) {
-            return 1;
-        } else
-            return 0;
-    }
 }
