@@ -14,6 +14,7 @@ import java.util.*;
 public class ConsoleSearch {
     private final Map<String, String> sources = new HashMap<>();
     private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MMM HH:mm", Locale.ENGLISH);
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
     private final List<String> headlinesList = new ArrayList<>();
 
     private void initRssSources() {
@@ -52,8 +53,7 @@ public class ConsoleSearch {
         int newsCount = 0;
 
         try {
-            System.out.println("> start searching for news headlines: " + LocalDateTime.now()
-                    .format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
+            System.out.println("> start searching for news headlines: " + LocalDateTime.now().format(formatter));
             initRssSources();
 
             for (Map.Entry<String, String> source : sources.entrySet()) {
@@ -112,7 +112,7 @@ public class ConsoleSearch {
                 System.out.println("> sending an email..");
                 new EmailManager().sendMessage(headlinesList, sendEmail, emailPwd, sendTo);
             } else {
-                System.out.println("> news headlines not found");
+                System.out.println("> news headlines not found: " + LocalDateTime.now().format(formatter));
             }
 
         } catch (Exception e) {
