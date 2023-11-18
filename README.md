@@ -17,4 +17,4 @@ For the application to work on a PC, Java must be installed: https://www.java.co
 ![image](https://github.com/mrprogre/avandy-news-console/assets/45883640/6c3d9445-cadf-417b-9c3f-d6202a86901c)
 
 ### Message example
-![image](https://github.com/mrprogre/avandy-news-console/assets/45883640/8cfeb2da-f0ed-449a-9e32-96a3a8ad503a)
+<img src="https://github.com/mrprogre/avandy-news-console/assets/45883640/8cfeb2da-f0ed-449a-9e32-96a3a8ad503a" width="130%">
